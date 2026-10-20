@@ -1,5 +1,9 @@
 # AI Test Case Generator
 
+![Frontend dashboard](docs/screenshots/frontend-dashboard.png)
+
+![Automation scripts panel](docs/screenshots/automation-panel.png)
+
 > **Turn requirements into a review-ready QA suite in minutes.**
 >
 > Paste a story, import a document, attach a wireframe, or combine them. The application uses AI to generate practical positive, negative, boundary, and edge test cases, then validates the result before you export it.
