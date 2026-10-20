@@ -2,6 +2,8 @@ package com.sakshi.service;
 
 import com.sakshi.config.Config;
 import okhttp3.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -9,7 +11,8 @@ import java.util.concurrent.TimeUnit;
 
 public class AIService {
 
-    private static final OkHttpClient client = new OkHttpClient.Builder()
+    private static final Logger logger = LoggerFactory.getLogger(AIService.class);
+    private static OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(180, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
@@ -52,23 +55,20 @@ public class AIService {
             try (Response response = client.newCall(request).execute()) {
 
                 if (response.body() == null) {
-                    System.out.println("ERROR: AI service returned an empty response.");
+                    logger.error("AI service returned an empty response.");
                     continue;
                 }
 
                 String responseBody = response.body().string();
 
                 if (response.isSuccessful()) {
+                    logger.debug("AI response received successfully.");
                     return responseBody;
                 }
 
                 int statusCode = response.code();
 
-                System.out.println(
-                        "AI request failed. Attempt "
-                                + attempt + "/" + maxAttempts
-                                + " | HTTP " + statusCode
-                );
+                logger.warn("AI request failed. Attempt {}/{} | HTTP {}", attempt, maxAttempts, statusCode);
 
                 if (statusCode == 401) {
                     throw new IOException(
@@ -77,29 +77,20 @@ public class AIService {
                 }
 
                 if (statusCode == 429) {
-                    System.out.println(
-                            "Rate limit reached. Retrying..."
-                    );
+                    logger.info("Rate limit reached. Retrying...");
                 }
 
                 else if (statusCode == 502 || statusCode == 503) {
-                    System.out.println(
-                            "AI provider is temporarily unavailable. Retrying..."
-                    );
+                    logger.info("AI provider is temporarily unavailable. Retrying...");
                 }
 
                 else {
-                    System.out.println(
-                            "OpenRouter error response: " + responseBody
-                    );
+                    logger.warn("OpenRouter error response: {}", responseBody);
                 }
 
             } catch (SocketTimeoutException e) {
 
-                System.out.println(
-                        "AI request timed out. Attempt "
-                                + attempt + "/" + maxAttempts
-                );
+                logger.warn("AI request timed out. Attempt {}/{}", attempt, maxAttempts);
 
             } catch (IOException e) {
 
@@ -107,14 +98,12 @@ public class AIService {
                     throw e;
                 }
 
-                System.out.println(
-                        "Network error while calling AI service."
-                );
+                logger.warn("Network error while calling AI service.");
             }
 
             if (attempt < maxAttempts) {
 
-                System.out.println("Retrying in 3 seconds...");
+                logger.info("Retrying in 3 seconds...");
 
                 try {
                     Thread.sleep(3000);
@@ -132,9 +121,11 @@ public class AIService {
         }
 
         throw new IOException(
-                "AI request failed after "
-                        + maxAttempts
-                        + " attempts."
+                "AI request failed after " + maxAttempts + " attempts."
         );
+    }
+
+    static void setClientForTesting(OkHttpClient testClient){
+        client=testClient;
     }
 }

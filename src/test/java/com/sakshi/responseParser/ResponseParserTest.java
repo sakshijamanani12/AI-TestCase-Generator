@@ -150,4 +150,56 @@ class ResponseParserTest {
         assertNull(result);
     }
 
+    @Test
+    void shouldReturnNullForInvalidJsonContent() {
+
+        String invalidResponse = """
+            {
+              "choices": [
+                {
+                  "message": {
+                    "content": "This is not valid JSON"
+                  }
+                }
+              ]
+            }
+            """;
+
+        AIResponse result = ResponseParser.parse(invalidResponse);
+
+        assertNull(result);
+    }
+
+    @Test
+    void shouldReturnNullWhenChoicesAreEmpty() {
+
+        String response = """
+            {
+              "choices": []
+            }
+            """;
+
+        AIResponse result = ResponseParser.parse(response);
+
+        assertNull(result);
+    }
+
+    @Test
+    void shouldReturnNullWhenContentIsMissing() {
+
+        String response = """
+            {
+              "choices": [
+                {
+                  "message": {}
+                }
+              ]
+            }
+            """;
+
+        AIResponse result = ResponseParser.parse(response);
+
+        assertNull(result);
+    }
+
 }

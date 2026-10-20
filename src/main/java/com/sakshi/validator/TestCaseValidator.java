@@ -63,6 +63,12 @@ public class TestCaseValidator {
 
         int totalCount=positiveCount+negativeCount+boundaryCount+edgeCount;
 
+        if(totalCount<4){
+            System.out.println("Validation failed: Atleast 4 testcases are required.");
+
+            return false;
+        }
+
         System.out.println();
         System.out.println("========== TEST CASE SUMMARY ==========");
         System.out.println();
@@ -155,6 +161,18 @@ public class TestCaseValidator {
                 );
                 return false;
             }
+
+            for(String step:testCase.getSteps()){
+                if (step == null || step.isBlank()) {
+
+                    System.out.println(
+                            "Validation failed: Empty step found for "
+                                    + testCase.getId()
+                    );
+                    return false;
+                }
+            }
+
 
             //Validate expected result
             if (testCase.getExpectedResult() == null ||

@@ -1,409 +1,368 @@
-# AI-Powered Test Case Generator
+# AI Test Case Generator
 
-An AI-powered Java application that generates structured software test cases from user stories using Generative AI.
+This project creates software test cases from a user story using AI. It accepts a story, sends it to OpenRouter, validates the response, and exports the test cases as JSON and CSV.
 
-The application accepts a user story as input, sends it to an AI model through the OpenRouter API, parses the generated response, validates the test cases, and exports the results in JSON and CSV formats.
+## What the project provides
 
-## Features
+- Positive test cases
+- Negative test cases
+- Boundary test cases
+- Edge test cases
+- Duplicate ID and duplicate scenario detection
+- Required-field validation
+- Category and test-type validation
+- JSON and CSV exports
+- Command-line application
+- Swing desktop application
+- React dashboard
+- Unit tests
 
-- Generate test cases from user stories using Generative AI
-- Generate Positive test scenarios
-- Generate Negative test scenarios
-- Generate Boundary test scenarios
-- Generate Edge test scenarios
-- Validate AI-generated test cases
-- Detect duplicate test case IDs
-- Detect duplicate test scenarios
-- Validate required test case fields
-- Validate category and test case type consistency
-- Parse structured AI responses using Jackson
-- Handle API failures and network timeouts
-- Retry failed AI requests
-- Export test cases to JSON
-- Export test cases to CSV
-- Read user stories from external text files
-- Automated unit tests using JUnit 5
+## How the application works
 
-## Technology Stack
+```text
+User story
+   ↓
+Read and validate the story
+   ↓
+Build an AI prompt
+   ↓
+Call OpenRouter
+   ↓
+Parse the AI response
+   ↓
+Validate the generated test cases
+   ↓
+Show and export the results
+```
 
-- Java 17
+The validation step is important because AI output should be checked before it is used as a test suite.
+
+## Technology used
+
+- Java 25 LTS
 - Maven
 - OpenRouter API
 - OkHttp
 - Jackson
+- Swing
+- React and Vite
+- TypeScript
 - JUnit 5
-- Git
-- GitHub
 
-## Application Flow
+## Important files
 
-User Story
-|
-v
-UserStoryReader
-|
-v
-UserStory
-|
-v
-PromptBuilder
-|
-v
-AIService
-|
-v
-OpenRouter / AI Model
-|
-v
-ResponseParser
-|
-v
-AIResponse
-|
-v
-TestCaseValidator
-|
-v
-TestCasePrinter
-|
-+----------------+
-|                |
-v                v
-JSON Output      CSV Output
+### Java entry points
 
-## Project Structure
+| File | What it does | Why it is used |
+|---|---|---|
+| `Main.java` | Runs the command-line version. It accepts a file path or asks for one. | Useful for terminal use and scripts. |
+| `GuiMain.java` | Opens the desktop Swing application. | Useful for users who prefer a graphical interface. |
+| `Launcher.java` | Selects GUI, CLI, or API-server mode. | Provides one entry point for the Java application. |
 
-AI-TestCase-Generator
-|
-|-- input
-|   `-- user_story.txt
-|
-|-- output
-|   |-- generated_test_cases.json
-|   `-- generated_test_cases.csv
-|
-|-- src
-|   |-- main
-|   |   `-- java
-|   |       `-- com.sakshi
-|   |           |-- Main.java
-|   |           |
-|   |           |-- model
-|   |           |   |-- UserStory.java
-|   |           |   |-- GeneratedTestCase.java
-|   |           |   |-- TestCaseGroup.java
-|   |           |   `-- AIResponse.java
-|   |           |
-|   |           |-- prompt
-|   |           |   `-- PromptBuilder.java
-|   |           |
-|   |           |-- service
-|   |           |   `-- AIService.java
-|   |           |
-|   |           |-- responseParser
-|   |           |   `-- ResponseParser.java
-|   |           |
-|   |           |-- validator
-|   |           |   `-- TestCaseValidator.java
-|   |           |
-|   |           |-- printer
-|   |           |   `-- TestCasePrinter.java
-|   |           |
-|   |           |-- exporter
-|   |           |   `-- CsvExporter.java
-|   |           |
-|   |           `-- util
-|   |               |-- FileUtil.java
-|   |               |-- UserStoryReader.java
-|   |               `-- InputValidator.java
-|   |
-|   `-- test
-|       `-- java
-|           `-- com.sakshi
-|               |-- validator
-|               |-- responseParser
-|               `-- util
-|
-|-- pom.xml
-|-- .gitignore
-`-- README.md
+### Java services
 
-## Input
+| File | What it does |
+|---|---|
+| `GenerationService.java` | Controls the complete generation process. |
+| `AIService.java` | Sends the prompt to OpenRouter and handles API requests and retries. |
+| `ApiServer.java` | Provides the local API used by the React dashboard. |
+| `GenerationResult.java` | Stores the result, message, generated JSON, CSV, and output paths. |
+| `PromptBuilder.java` | Builds the prompt sent to the AI model. |
+| `ResponseParser.java` | Converts the AI JSON response into Java objects. |
 
-The application accepts a user story through a text file.
+### Models
 
-The default input file can be stored under:
+| File | What it stores |
+|---|---|
+| `UserStory.java` | Feature, user story, and expected behavior. |
+| `AIResponse.java` | The complete generated response. |
+| `TestCaseGroup.java` | Test cases grouped by category. |
+| `GeneratedTestCase.java` | One generated test case. |
 
-input/user_story.txt
+### Validation and output
 
-Example:
+| File | What it does |
+|---|---|
+| `TestCaseValidator.java` | Checks required fields, duplicate IDs, duplicate scenarios, and category/type consistency. |
+| `TestCaseQualityValidator.java` | Checks that all four test categories are covered. |
+| `TestCasePrinter.java` | Prints test cases in the terminal. |
+| `CsvExporter.java` | Creates CSV output. |
+| `FileUtil.java` | Writes generated files to the output directory. |
 
+### Input and configuration
+
+| File | What it does |
+|---|---|
+| `UserStoryReader.java` | Reads the user-story text file. |
+| `InputValidator.java` | Checks that the input has the required sections. |
+| `AppConfig.java` | Loads application settings and the API key. |
+| `Config.java` | Provides API configuration to the AI service. |
+| `application.properties` | Stores non-secret defaults such as the model and output directory. |
+
+## Project folders
+
+```text
+input/                         User-story files
+output/                        Generated JSON and CSV files
+src/main/java/                 Java application
+src/main/resources/             Application configuration
+src/test/java/                 JUnit tests
+frontend/                      React dashboard
+.vscode/                       VS Code Java settings and run profiles
+pom.xml                        Maven configuration
+```
+
+## Input format
+
+The Java application expects a text file with these sections:
+
+```text
 Feature: User Login
 
 User Story:
-
-As a registered user,
-I want to log into the application,
-so that I can access my account.
+As a registered user, I want to log in to my account.
 
 Expected Behavior:
+Valid users should reach the dashboard.
+Invalid users should see an error message.
+```
 
-The user should be able to log in successfully
-using valid credentials.
+The frontend also recognizes:
 
-Invalid credentials should display an appropriate
-error message.
+- `Feature`
+- `User Story`
+- `Expected Behavior`
+- `Acceptance Criteria`
 
-## How It Works
+The frontend can import TXT and PDF files.
 
-### 1. User Story Reading
+## API key setup
 
-The UserStoryReader reads the user story file and extracts:
+The API key must be stored in an environment variable. This keeps the key out of the source code and out of the browser.
 
-- Feature
-- User Story
-- Expected Behavior
+In PowerShell:
 
-The extracted information is stored in the UserStory model.
+```powershell
+$env:OPENROUTER_API_KEY="your-openrouter-api-key"
+```
 
-### 2. Prompt Generation
+Do not put the key in a frontend `VITE_*` variable. Frontend variables are visible in the browser.
 
-PromptBuilder creates a structured prompt using the user story.
+## Run the Java CLI
 
-The prompt instructs the AI model to generate test cases across multiple testing categories.
+From the project root:
 
-### 3. AI Integration
+```powershell
+mvn exec:java "-Dexec.mainClass=com.sakshi.Main" "-Dexec.args=input/user_story.txt"
+```
 
-AIService sends the generated prompt to an AI model through the OpenRouter API.
+### Why use this command?
 
-The service handles:
+It runs the Java application through Maven, so all required libraries such as Jackson and OkHttp are included.
 
-- API authentication
-- HTTP requests
-- AI responses
-- API failures
-- Network failures
-- Request retries
+To enter the path yourself, run without `-Dexec.args`:
 
-### 4. Response Parsing
+```powershell
+mvn exec:java "-Dexec.mainClass=com.sakshi.Main"
+```
 
-ResponseParser processes the AI response.
+The application will ask:
 
-Jackson is used to parse the JSON response and convert it into the application's Java model classes.
+```text
+Enter user story file path:
+```
 
-### 5. Test Case Validation
+## Run the Java GUI
 
-TestCaseValidator validates the generated test cases.
+```powershell
+mvn exec:java "-Dexec.mainClass=com.sakshi.GuiMain"
+```
 
-The validation checks:
+### Why use the GUI?
 
-- AI response is present
-- Test case groups are present
-- All required categories contain test cases
-- Test case IDs are present
-- Test case IDs are unique
-- Test scenarios are present
-- Test scenarios are unique
-- Test steps are present
-- Expected results are present
-- Test case types are present
-- Test case category matches the test case type
+The GUI lets you browse for a story file, preview it, generate test cases, view JSON, view the CSV-style table, and see where the output files were saved.
 
-### 6. Test Case Output
+## Run from VS Code
 
-TestCasePrinter displays the generated test cases in the console.
+The project includes Java 25 settings and run profiles in `.vscode/`.
 
-The application also exports the generated test cases to:
+1. Open the project root in VS Code.
+2. Set the API key in the VS Code terminal.
+3. Press `Ctrl+Shift+D`.
+4. Select a profile.
+5. Press `F5`.
 
-- JSON
-- CSV
+Available profiles:
 
-## Test Case Categories
+- **Launcher** — opens the GUI/CLI selector.
+- **CLI** — runs with `input/user_story.txt`.
+- **GUI** — opens the desktop application.
 
-### Positive Test Cases
+### Why use the VS Code profiles?
 
-Verify that the application behaves correctly when valid inputs and expected conditions are provided.
+They automatically use the correct Java project classpath and Maven dependencies. This avoids errors caused by running Java files with a generic Code Runner command.
 
-### Negative Test Cases
+## Run the React frontend with real AI generation
 
-Verify that the application handles invalid inputs and failure scenarios correctly.
+The frontend uses the Java API server. Run the Java server and frontend in two separate terminals.
 
-### Boundary Test Cases
+### Terminal 1: start the Java API
 
-Verify behavior around minimum, maximum, and limit values.
+From the project root:
 
-### Edge Test Cases
+```powershell
+$env:OPENROUTER_API_KEY="your-openrouter-api-key"
+mvn exec:java "-Dexec.mainClass=com.sakshi.Launcher" "-Dexec.args=--server"
+```
 
-Verify unusual, uncommon, or special scenarios that may occur outside normal usage.
+Keep this terminal open. You should see:
 
-## Example Generated Test Case
+```text
+Java generator API listening at http://localhost:8080
+```
 
-Testcase ID: TC001
+Check that the server is working:
 
-Test Scenario:
+```text
+http://localhost:8080/api/health
+```
 
-Verify successful login with valid credentials
+The response should be:
 
-Test Steps:
+```json
+{"status":"ok"}
+```
 
-1. Navigate to login page
-2. Enter registered email address
-3. Enter correct password
-4. Click login button
+### Terminal 2: start the React frontend
 
-Expected Result:
+```powershell
+cd frontend
+npm install
+$env:VITE_API_BASE_URL="http://localhost:8080"
+npm run dev
+```
 
-User is redirected to the dashboard.
+Open the URL printed by Vite, usually:
 
-Type:
+```text
+http://localhost:5173
+```
 
-Positive
+Import a story and click **Generate test cases**.
 
-## Validation Example
+### Why are two terminals required?
 
-The application provides a validation summary after generating test cases.
+The Java process holds the API key and communicates with OpenRouter. The React process only provides the user interface. Keeping these responsibilities separate protects the API key.
 
-Example:
+### Optional frontend configuration
 
-========== TEST CASE SUMMARY ==========
+To avoid setting the backend URL every time, create `frontend/.env.local`:
 
-Positive : 3
-Negative : 8
-Boundary : 5
-Edge     : 6
+```env
+VITE_API_BASE_URL=http://localhost:8080
+```
 
-----------------------------------------
+Do not put `OPENROUTER_API_KEY` in this file.
 
-Total    : 22
+### Demo mode
 
-Unique IDs: PASSED
-Duplicate Scenarios: NONE
-Category Validation: PASSED
+If `VITE_API_BASE_URL` is not set, the frontend uses sample data from `frontend/src/fixtures/generatedTestCases.ts`.
 
-========================================
+This mode is useful for viewing the interface without starting Java or using an API key, but the results are not generated by AI.
 
-## Output
+## API endpoint
 
-Generated files are stored in the output directory.
+The frontend sends this request:
 
-Example:
+```text
+POST http://localhost:8080/api/generate
+```
 
-output/
-generated_test_cases.json
-generated_test_cases.csv
+Example body:
 
-The JSON file contains the complete structured AI response.
+```json
+{
+  "feature": "User Login",
+  "userStory": "As a registered user, I want to log in.",
+  "expectedBehavior": "Valid users reach the dashboard."
+}
+```
 
-The CSV file provides the generated test cases in a tabular format.
+The health endpoint is:
 
-## Configuration
+```text
+GET http://localhost:8080/api/health
+```
 
-The application uses an OpenRouter API key to communicate with the AI model.
+## Output files
 
-The API key should be stored as an environment variable.
+Generated files are written to `output/`:
 
-Environment variable:
+```text
+output/generated_test_cases.json
+output/generated_test_cases.csv
+```
 
-OPENROUTER_API_KEY
+- JSON preserves the complete structured response.
+- CSV is convenient for spreadsheets and test-management tools.
 
-The API key should not be committed to the repository.
+## Build and test
 
-Example configuration:
+Run all tests:
 
-public static final String API_KEY =
-System.getenv("OPENROUTER_API_KEY");
-
-## Running the Application
-
-### Prerequisites
-
-Install the following:
-
-- Java 17 or higher
-- Maven
-- IntelliJ IDEA
-- Git
-- OpenRouter API key
-
-### Run from IntelliJ IDEA
-
-1. Open the project in IntelliJ IDEA.
-2. Make sure Maven dependencies are loaded.
-3. Configure the OPENROUTER_API_KEY environment variable.
-4. Run Main.java.
-5. Enter the path to the user story file when prompted.
-
-Example:
-
-input/user_story.txt
-
-## Running Tests
-
-The project uses JUnit 5 for unit testing.
-
-The tests cover important application components including:
-
-- Test case validation
-- Response parsing
-- User story reading
-- File handling
-
-Tests can be executed directly from IntelliJ IDEA.
-
-They can also be executed using Maven:
-
+```powershell
 mvn test
+```
 
-## Error Handling
+Run a clean build and tests:
 
-The application handles common failures including:
+```powershell
+mvn clean test
+```
 
-- Missing input file
-- Empty input file
-- Missing user story sections
-- Empty AI response
-- Invalid AI response
-- Missing AI response fields
-- API errors
-- Network timeouts
-- Temporary AI service failures
-- Invalid generated test cases
+The tests cover parsing, AI-service error handling, file handling, CSV export, input validation, duplicate detection, category validation, and quality validation.
 
-The AI service includes retry handling for temporary request failures.
+## Common problems
 
-## Why This Project?
+### The frontend shows demo data
 
-Generating comprehensive test cases manually from user stories can be time-consuming and may result in missed scenarios.
+Set `VITE_API_BASE_URL` and restart Vite:
 
-This project explores how Generative AI can assist QA engineers by automatically generating structured test cases while applying automated validation rules to improve the quality and consistency of the generated output.
+```powershell
+$env:VITE_API_BASE_URL="http://localhost:8080"
+npm run dev
+```
 
-The project combines:
+### The frontend cannot connect to the backend
 
-- Software testing
-- Test case design
-- Java development
-- API integration
-- Generative AI
-- JSON processing
-- Automated validation
-- Unit testing
-- Test automation concepts
+Make sure Terminal 1 is still running and that this URL works:
 
-## Testing Approach
+```text
+http://localhost:8080/api/health
+```
 
-The project follows a QA-focused approach by validating AI-generated output instead of directly trusting the AI response.
+### API authentication fails
 
-Generated test cases are checked for:
+Set the API key in the same terminal used to start the Java server:
 
-- Completeness
-- Required fields
-- Duplicate IDs
-- Duplicate scenarios
-- Correct test categories
-- Valid test steps
-- Expected results
+```powershell
+$env:OPENROUTER_API_KEY="your-real-api-key"
+```
 
-This ensures that the AI-generated output goes through a validation layer before being exported.
+### `Main.java` does not ask for a file path
+
+A path was passed as an argument. Run `Main.java` without `-Dexec.args` to receive the prompt.
+
+### VS Code shows dependency errors
+
+Open the repository root, install the Java Extension Pack, reload VS Code, and use the Java Run/Debug profile instead of the generic Code Runner extension.
+
+## Security reminder
+
+- Keep the OpenRouter key in `OPENROUTER_API_KEY`.
+- Never commit the key to Git.
+- Never put the key in frontend code or `VITE_*` variables.
+- Review AI-generated test cases before using them in a production test suite.
 
 ## Author
 

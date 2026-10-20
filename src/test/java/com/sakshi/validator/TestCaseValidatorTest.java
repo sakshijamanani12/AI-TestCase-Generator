@@ -3,6 +3,7 @@ package com.sakshi.validator;
 import com.sakshi.model.AIResponse;
 import com.sakshi.model.GeneratedTestCase;
 import com.sakshi.model.TestCaseGroup;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -272,6 +273,54 @@ class TestCaseValidatorTest {
         boolean result = TestCaseValidator.validate(response);
 
         assertFalse(result);
+    }
+
+    @Test
+    void shouldFailWhenStepIsBlank(){
+
+        GeneratedTestCase positive=createTestCase(
+                "TC001",
+                "Login with valid credentials",
+                "Positive"
+        );
+
+        positive.setSteps(List.of(
+                "Open login page",
+                "  ",
+                "Click login"
+        ));
+
+        GeneratedTestCase negative=createTestCase(
+                "TC002",
+                "Login with invalid password",
+                "Negative"
+        );
+
+        GeneratedTestCase boundary=createTestCase(
+                "TC003",
+                "Login with maximum password length",
+                "Boundary:"
+        );
+
+        GeneratedTestCase edge=createTestCase(
+                "TC004",
+                "Login with Unicode characters",
+                "Edge"
+        );
+
+        TestCaseGroup group = new TestCaseGroup();
+
+        group.setPositive(List.of(positive));
+        group.setNegative(List.of(negative));
+        group.setBoundary(List.of(boundary));
+        group.setEdge(List.of(edge));
+
+        AIResponse response=new AIResponse();
+        response.setTestCases(group);
+
+        boolean result=TestCaseValidator.validate(response);
+
+        Assertions.assertFalse(result);
     }
 
 }

@@ -3,137 +3,167 @@
     "positive" : [ {
       "id" : "TC001",
       "scenario" : "Verify successful login with valid credentials",
-      "steps" : [ "Navigate to login page", "Enter registered email address", "Enter correct password", "Click login button" ],
+      "steps" : [ "Navigate to login page", "Enter valid registered email", "Enter valid password", "Click login button" ],
       "expectedResult" : "User is redirected to dashboard.",
       "type" : "Positive"
     }, {
       "id" : "TC002",
-      "scenario" : "Verify successful login with case-insensitive email",
-      "steps" : [ "Navigate to login page", "Enter registered email address with different casing", "Enter correct password", "Click login button" ],
-      "expectedResult" : "User is redirected to dashboard.",
+      "scenario" : "Verify successful login with Remember Me option",
+      "steps" : [ "Navigate to login page", "Enter valid registered email", "Enter valid password", "Check Remember Me checkbox", "Click login button" ],
+      "expectedResult" : "User is redirected to dashboard and session persists after browser close.",
       "type" : "Positive"
     }, {
       "id" : "TC003",
-      "scenario" : "Verify login with remember me option",
-      "steps" : [ "Navigate to login page", "Enter registered email address", "Enter correct password", "Check remember me checkbox", "Click login button" ],
-      "expectedResult" : "User is redirected to dashboard and session persists.",
+      "scenario" : "Verify login with case-insensitive email",
+      "steps" : [ "Navigate to login page", "Enter registered email with uppercase letters", "Enter valid password", "Click login button" ],
+      "expectedResult" : "User is redirected to dashboard.",
       "type" : "Positive"
     } ],
     "negative" : [ {
       "id" : "TC004",
       "scenario" : "Verify login fails with invalid email format",
-      "steps" : [ "Navigate to login page", "Enter invalid email format (e.g., 'userexample.com')", "Enter any password", "Click login button" ],
+      "steps" : [ "Navigate to login page", "Enter invalid email format (missing @)", "Enter valid password", "Click login button" ],
       "expectedResult" : "Error message indicates invalid email format.",
       "type" : "Negative"
     }, {
       "id" : "TC005",
-      "scenario" : "Verify login fails with non-existent email",
-      "steps" : [ "Navigate to login page", "Enter email not registered in system", "Enter any password", "Click login button" ],
+      "scenario" : "Verify login fails with unregistered email",
+      "steps" : [ "Navigate to login page", "Enter unregistered email", "Enter valid password", "Click login button" ],
       "expectedResult" : "Error message indicates invalid credentials.",
       "type" : "Negative"
     }, {
       "id" : "TC006",
-      "scenario" : "Verify login fails with correct email but wrong password",
-      "steps" : [ "Navigate to login page", "Enter registered email address", "Enter incorrect password", "Click login button" ],
+      "scenario" : "Verify login fails with incorrect password",
+      "steps" : [ "Navigate to login page", "Enter valid registered email", "Enter incorrect password", "Click login button" ],
       "expectedResult" : "Error message indicates invalid credentials.",
       "type" : "Negative"
     }, {
       "id" : "TC007",
       "scenario" : "Verify login fails with empty email field",
-      "steps" : [ "Navigate to login page", "Leave email field empty", "Enter correct password", "Click login button" ],
+      "steps" : [ "Navigate to login page", "Leave email field empty", "Enter valid password", "Click login button" ],
       "expectedResult" : "Error message indicates email is required.",
       "type" : "Negative"
     }, {
       "id" : "TC008",
       "scenario" : "Verify login fails with empty password field",
-      "steps" : [ "Navigate to login page", "Enter registered email address", "Leave password field empty", "Click login button" ],
+      "steps" : [ "Navigate to login page", "Enter valid registered email", "Leave password field empty", "Click login button" ],
       "expectedResult" : "Error message indicates password is required.",
       "type" : "Negative"
     }, {
       "id" : "TC009",
       "scenario" : "Verify login fails with both fields empty",
       "steps" : [ "Navigate to login page", "Leave email field empty", "Leave password field empty", "Click login button" ],
-      "expectedResult" : "Error message indicates both fields are required.",
+      "expectedResult" : "Error message indicates both email and password are required.",
       "type" : "Negative"
     }, {
       "id" : "TC010",
-      "scenario" : "Verify login fails with SQL injection attempt in email",
-      "steps" : [ "Navigate to login page", "Enter SQL injection payload in email field (e.g., ' OR '1'='1')", "Enter any password", "Click login button" ],
-      "expectedResult" : "Error message indicates invalid credentials or sanitized input.",
+      "scenario" : "Verify login fails with SQL injection attempt",
+      "steps" : [ "Navigate to login page", "Enter SQL injection payload in email field", "Enter SQL injection payload in password field", "Click login button" ],
+      "expectedResult" : "Error message indicates invalid credentials and no database error is exposed.",
+      "type" : "Negative"
+    }, {
+      "id" : "TC011",
+      "scenario" : "Verify login fails with XSS attempt",
+      "steps" : [ "Navigate to login page", "Enter XSS payload in email field", "Enter XSS payload in password field", "Click login button" ],
+      "expectedResult" : "Error message indicates invalid credentials and payload is not executed.",
       "type" : "Negative"
     } ],
     "boundary" : [ {
-      "id" : "TC011",
-      "scenario" : "Verify login with email at maximum allowed length",
-      "steps" : [ "Navigate to login page", "Enter email with maximum allowed characters (254) that is registered", "Enter correct password", "Click login button" ],
-      "expectedResult" : "User is redirected to dashboard.",
-      "type" : "Boundary"
-    }, {
       "id" : "TC012",
-      "scenario" : "Verify login fails with email exceeding maximum length",
-      "steps" : [ "Navigate to login page", "Enter email exceeding maximum allowed characters (255)", "Enter correct password", "Click login button" ],
-      "expectedResult" : "Error message indicates email is too long.",
+      "scenario" : "Verify login with maximum length email (254 characters)",
+      "steps" : [ "Navigate to login page", "Enter valid email with 254 characters", "Enter valid password", "Click login button" ],
+      "expectedResult" : "User is redirected to dashboard.",
       "type" : "Boundary"
     }, {
       "id" : "TC013",
-      "scenario" : "Verify login with password at minimum allowed length",
-      "steps" : [ "Navigate to login page", "Enter registered email", "Enter password with minimum allowed characters (e.g., 8)", "Click login button" ],
-      "expectedResult" : "User is redirected to dashboard.",
+      "scenario" : "Verify login fails with email exceeding maximum length (255 characters)",
+      "steps" : [ "Navigate to login page", "Enter email with 255 characters", "Enter valid password", "Click login button" ],
+      "expectedResult" : "Error message indicates email exceeds maximum length.",
       "type" : "Boundary"
     }, {
       "id" : "TC014",
-      "scenario" : "Verify login fails with password below minimum length",
-      "steps" : [ "Navigate to login page", "Enter registered email", "Enter password with less than minimum allowed characters (e.g., 7)", "Click login button" ],
-      "expectedResult" : "Error message indicates password does not meet minimum length.",
+      "scenario" : "Verify login with maximum length password (128 characters)",
+      "steps" : [ "Navigate to login page", "Enter valid registered email", "Enter password with 128 characters", "Click login button" ],
+      "expectedResult" : "User is redirected to dashboard.",
       "type" : "Boundary"
     }, {
       "id" : "TC015",
-      "scenario" : "Verify login with password at maximum allowed length",
-      "steps" : [ "Navigate to login page", "Enter registered email", "Enter password with maximum allowed characters (e.g., 128)", "Click login button" ],
-      "expectedResult" : "User is redirected to dashboard.",
+      "scenario" : "Verify login fails with password exceeding maximum length (129 characters)",
+      "steps" : [ "Navigate to login page", "Enter valid registered email", "Enter password with 129 characters", "Click login button" ],
+      "expectedResult" : "Error message indicates password exceeds maximum length.",
       "type" : "Boundary"
     }, {
       "id" : "TC016",
-      "scenario" : "Verify login fails with password exceeding maximum length",
-      "steps" : [ "Navigate to login page", "Enter registered email", "Enter password exceeding maximum allowed characters (e.g., 129)", "Click login button" ],
-      "expectedResult" : "Error message indicates password is too long.",
+      "scenario" : "Verify login with minimum length email (5 characters: a@b.c)",
+      "steps" : [ "Navigate to login page", "Enter valid minimum length email", "Enter valid password", "Click login button" ],
+      "expectedResult" : "User is redirected to dashboard.",
+      "type" : "Boundary"
+    }, {
+      "id" : "TC017",
+      "scenario" : "Verify login fails with email below minimum length",
+      "steps" : [ "Navigate to login page", "Enter email with 4 characters", "Enter valid password", "Click login button" ],
+      "expectedResult" : "Error message indicates email is too short.",
+      "type" : "Boundary"
+    }, {
+      "id" : "TC018",
+      "scenario" : "Verify login with minimum length password (8 characters)",
+      "steps" : [ "Navigate to login page", "Enter valid registered email", "Enter password with 8 characters", "Click login button" ],
+      "expectedResult" : "User is redirected to dashboard.",
+      "type" : "Boundary"
+    }, {
+      "id" : "TC019",
+      "scenario" : "Verify login fails with password below minimum length",
+      "steps" : [ "Navigate to login page", "Enter valid registered email", "Enter password with 7 characters", "Click login button" ],
+      "expectedResult" : "Error message indicates password is too short.",
       "type" : "Boundary"
     } ],
     "edge" : [ {
-      "id" : "TC017",
-      "scenario" : "Verify login trims leading and trailing spaces in email",
-      "steps" : [ "Navigate to login page", "Enter registered email with leading and trailing spaces", "Enter correct password", "Click login button" ],
-      "expectedResult" : "User is redirected to dashboard.",
-      "type" : "Edge"
-    }, {
-      "id" : "TC018",
-      "scenario" : "Verify login fails with multiple spaces in email",
-      "steps" : [ "Navigate to login page", "Enter email with multiple consecutive spaces", "Enter correct password", "Click login button" ],
-      "expectedResult" : "Error message indicates invalid email format.",
-      "type" : "Edge"
-    }, {
-      "id" : "TC019",
-      "scenario" : "Verify login with Unicode characters in email if allowed",
-      "steps" : [ "Navigate to login page", "Enter registered email containing Unicode characters", "Enter correct password", "Click login button" ],
-      "expectedResult" : "User is redirected to dashboard.",
-      "type" : "Edge"
-    }, {
       "id" : "TC020",
-      "scenario" : "Verify login fails with extremely long password input",
-      "steps" : [ "Navigate to login page", "Enter registered email", "Enter password with 1000 characters", "Click login button" ],
-      "expectedResult" : "Error message indicates password is too long or input is truncated.",
+      "scenario" : "Verify login trims leading and trailing spaces in email",
+      "steps" : [ "Navigate to login page", "Enter valid email with leading and trailing spaces", "Enter valid password", "Click login button" ],
+      "expectedResult" : "User is redirected to dashboard.",
       "type" : "Edge"
     }, {
       "id" : "TC021",
-      "scenario" : "Verify login with disabled account",
-      "steps" : [ "Navigate to login page", "Enter email of disabled account", "Enter correct password", "Click login button" ],
-      "expectedResult" : "Error message indicates account is disabled.",
+      "scenario" : "Verify login does not trim leading and trailing spaces in password",
+      "steps" : [ "Navigate to login page", "Enter valid registered email", "Enter password with leading and trailing spaces (not part of actual password)", "Click login button" ],
+      "expectedResult" : "Error message indicates invalid credentials.",
       "type" : "Edge"
     }, {
       "id" : "TC022",
-      "scenario" : "Verify login locks account after multiple failed attempts",
-      "steps" : [ "Navigate to login page", "Enter registered email", "Enter incorrect password 5 times consecutively", "Click login button each time" ],
-      "expectedResult" : "Account is locked and error message indicates too many attempts.",
+      "scenario" : "Verify account lockout after multiple failed login attempts",
+      "steps" : [ "Navigate to login page", "Enter valid registered email", "Enter incorrect password 5 times consecutively", "Click login button each time" ],
+      "expectedResult" : "Account is temporarily locked and further attempts show lockout message.",
+      "type" : "Edge"
+    }, {
+      "id" : "TC023",
+      "scenario" : "Verify concurrent login invalidates previous session",
+      "steps" : [ "Login with valid credentials in browser A", "Login with same credentials in browser B", "Attempt to access dashboard in browser A" ],
+      "expectedResult" : "Browser A session is invalidated and user is redirected to login page.",
+      "type" : "Edge"
+    }, {
+      "id" : "TC024",
+      "scenario" : "Verify login fails after password change using old password",
+      "steps" : [ "Change password via reset flow", "Attempt login with old password", "Click login button" ],
+      "expectedResult" : "Error message indicates invalid credentials.",
+      "type" : "Edge"
+    }, {
+      "id" : "TC025",
+      "scenario" : "Verify login fails with disabled account",
+      "steps" : [ "Navigate to login page", "Enter email of disabled account", "Enter valid password", "Click login button" ],
+      "expectedResult" : "Error message indicates account is disabled.",
+      "type" : "Edge"
+    }, {
+      "id" : "TC026",
+      "scenario" : "Verify login redirects to password change when password expired",
+      "steps" : [ "Navigate to login page", "Enter email with expired password", "Enter expired password", "Click login button" ],
+      "expectedResult" : "User is redirected to password change page.",
+      "type" : "Edge"
+    }, {
+      "id" : "TC027",
+      "scenario" : "Verify login fails with unverified email",
+      "steps" : [ "Navigate to login page", "Enter email of unverified account", "Enter valid password", "Click login button" ],
+      "expectedResult" : "Error message indicates email is not verified.",
       "type" : "Edge"
     } ]
   }
