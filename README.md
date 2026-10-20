@@ -2,22 +2,18 @@
 
 > **Turn requirements into a review-ready QA suite in minutes.**
 >
-> Paste a story, import a document, attach a wireframe, or combine them. The application uses AI to generate practical positive, negative, boundary, and edge test cases—then validates the result before you export it.
-
-![AI Test Case Generator dashboard preview](docs/screenshots/dashboard-preview.svg)
-
-![Generated test case output and automation preview](docs/screenshots/output-preview.svg)
+> Paste a story, import a document, attach a wireframe, or combine them. The application uses AI to generate practical positive, negative, boundary, and edge test cases, then validates the result before you export it.
 
 ## Why teams use it
 
 Manual test design is slow, repetitive, and easy to under-cover. AI Test Case Generator gives product, QA, and engineering teams a faster starting point without treating AI output as automatically correct.
 
-- **Faster test design** — turn a requirement into a structured suite in one click.
-- **Broader coverage** — generate positive, negative, boundary, and edge scenarios.
-- **Multiple input styles** — paste text, upload TXT/PDF requirements, or attach PNG/JPG wireframes and JSON test data.
-- **Useful outputs** — inspect cases in the dashboard and export JSON or CSV for automation and test-management tools.
-- **Built-in quality gates** — malformed, incomplete, duplicated, or incorrectly categorized cases are rejected before export.
-- **Secure architecture** — the OpenRouter key stays in the Java backend and is never sent to the browser.
+- **Faster test design**: turn a requirement into a structured suite in one click.
+- **Broader coverage**: generate positive, negative, boundary, and edge scenarios.
+- **Multiple input styles**: paste text, upload TXT/PDF requirements, or attach PNG/JPG wireframes and JSON test data.
+- **Useful outputs**: inspect cases in the dashboard and export JSON or CSV for automation and test-management tools.
+- **Built-in quality gates**: malformed, incomplete, duplicated, or incorrectly categorized cases are rejected before export.
+- **Secure architecture**: the OpenRouter key stays in the Java backend and is never sent to the browser.
 
 ## What the frontend offers
 
@@ -63,10 +59,10 @@ Every successful run produces a structured QA suite with fields such as:
 
 The application generates:
 
-- **JSON** — complete structured output for APIs, automation, and future processing.
-- **CSV** — spreadsheet-friendly output for review, sharing, and test-management import.
-- **Dashboard results** — searchable, filterable cases with category coverage and expanded details.
-- **Automation previews** — generated snippets in Playwright, Cypress, or Gherkin format.
+- **JSON**: complete structured output for APIs, automation, and future processing.
+- **CSV**: spreadsheet-friendly output for review, sharing, and test-management import.
+- **Dashboard results**: searchable, filterable cases with category coverage and expanded details.
+- **Automation previews**: generated snippets in Playwright, Cypress, or Gherkin format.
 
 Default files:
 
@@ -74,6 +70,32 @@ Default files:
 output/generated_test_cases.json
 output/generated_test_cases.csv
 ```
+
+## Coverage and automation
+
+The generator is designed to cover the four core test-case types in every suite:
+
+| Type | What it checks |
+|---|---|
+| Positive | The feature works when valid input and normal actions are used. |
+| Negative | Invalid input, rejected actions, errors, and failure messages. |
+| Boundary | Minimums, maximums, limits, empty values, and just-inside or just-outside values. |
+| Edge | Unusual flows, refreshes, repeated actions, unexpected state, and less common user behavior. |
+
+The dashboard shows the count for each category. The quality validator also checks that Positive, Negative, Boundary, and Edge coverage are all represented before the result is treated as a complete suite.
+
+### Basic Playwright script layout
+
+The frontend generates a basic Playwright test layout for each selected case. It includes:
+
+1. A `test()` block named after the scenario.
+2. Playwright actions such as `page.goto()`, `getByLabel().fill()`, `getByRole().click()`, `check()`, `reload()`, and keyboard actions when the step can be recognized.
+3. A comment containing the expected result.
+4. A `TODO` comment for any step that needs a project-specific locator or implementation.
+
+The same case can also be viewed as Cypress JavaScript or Cucumber Gherkin.
+
+> **Important:** The generated Playwright scripts are not entirely reliable or production-ready. They are intended to provide a basic automation layout and a helpful starting point. Review and adapt the locators, test data, authentication flow, environment setup, and assertions for the application before using them in a real test suite.
 
 ## How quality and accuracy are checked
 
@@ -276,9 +298,9 @@ mvn exec:java "-Dexec.mainClass=com.sakshi.GuiMain"
 
 Available profiles:
 
-- **AI Test Case Generator (Launcher)** — opens the mode selector.
-- **AI Test Case Generator (CLI)** — runs the example story.
-- **AI Test Case Generator (GUI)** — opens the Swing application.
+- **AI Test Case Generator (Launcher)**: opens the mode selector.
+- **AI Test Case Generator (CLI)**: runs the example story.
+- **AI Test Case Generator (GUI)**: opens the Swing application.
 
 **Why:** the profiles use the Java project classpath and Maven dependencies, avoiding the common generic Code Runner classpath problem.
 
@@ -423,7 +445,7 @@ Open the repository root, install the Java Extension Pack, reload VS Code, and u
 - Never commit the key to Git.
 - Never put the key in frontend code or `VITE_*` variables.
 - Review generated cases against the original requirement before production use.
-- Treat the validator as a quality gate for structure and coverage—not a replacement for human QA judgment.
+- Treat the validator as a quality gate for structure and coverage, not a replacement for human QA judgment.
 
 ## Author
 
