@@ -6,328 +6,154 @@
 
 > **Turn requirements into a review-ready QA suite in minutes.**
 >
-> Paste a story, import a document, attach a wireframe, or combine them. The application uses AI to generate practical positive, negative, boundary, and edge test cases, then validates the result before you export it.
+> Add a user story, requirement document, wireframe, or supporting JSON. The product generates structured test cases, checks their quality, and gives you exportable results and automation starters.
 
-## Why teams use it
+## Why you should use it
 
-Manual test design is slow, repetitive, and easy to under-cover. AI Test Case Generator gives product, QA, and engineering teams a faster starting point without treating AI output as automatically correct.
+AI Test Case Generator helps QA, product, and engineering teams move from requirements to test coverage faster.
 
-- **Faster test design**: turn a requirement into a structured suite in one click.
-- **Broader coverage**: generate positive, negative, boundary, and edge scenarios.
-- **Multiple input styles**: paste text, upload TXT/PDF requirements, or attach PNG/JPG wireframes and JSON test data.
-- **Useful outputs**: inspect cases in the dashboard and export JSON or CSV for automation and test-management tools.
-- **Built-in quality gates**: malformed, incomplete, duplicated, or incorrectly categorized cases are rejected before export.
-- **Secure architecture**: the OpenRouter key stays in the Java backend and is never sent to the browser.
+- Generate Positive, Negative, Boundary, and Edge test cases.
+- Import TXT and PDF requirements or paste the story directly.
+- Attach PNG/JPG wireframes and JSON as additional context.
+- Review cases with search, filters, category counts, and expandable details.
+- Export structured JSON and spreadsheet-friendly CSV.
+- Preview basic Playwright, Cypress, and Gherkin automation layouts.
+- Validate required fields, duplicate IDs, duplicate scenarios, category consistency, and coverage.
+- Keep the OpenRouter API key on the Java server instead of exposing it in the browser.
 
-## What the frontend offers
+## What the product does
 
-The React dashboard is the easiest way to use the product. It provides a focused workflow from input to export:
+1. Reads and validates the requirement.
+2. Builds a structured prompt from the story and selected coverage options.
+3. Generates test cases through OpenRouter.
+4. Parses the response and checks its structure.
+5. Validates the generated suite.
+6. Shows the results in the dashboard or desktop app.
+7. Exports JSON and CSV files.
 
-1. **Describe the feature** using editable Feature, User Story, and Expected Behavior fields.
-2. **Import requirements** from TXT or PDF, with automatic extraction of recognized sections.
-3. **Attach supporting context** such as a PNG/JPG wireframe or JSON file when the story needs UI or data details.
-4. **Choose coverage depth** for positive, negative, boundary, and edge scenarios.
-5. **Generate test cases** through the Java API and OpenRouter.
-6. **Review coverage visually** with totals, category counts, search, filters, and expandable case details.
-7. **Inspect automation previews** for Playwright, Cypress, or Gherkin-style output.
-8. **Download the suite** as JSON or CSV.
+### Supported inputs
 
-The interface also includes demo mode, so the dashboard can be explored without Java or an API key. Demo mode uses fixture data; real AI generation requires the Java API server.
-
-## Input options at a glance
-
-| Input | Supported use |
+| Input | Use |
 |---|---|
-| Pasted text | Enter a story directly in the dashboard. |
-| TXT document | Import plain-text requirements. |
-| PDF document | Extract text from a PDF requirement document. |
-| PNG/JPG image | Attach a wireframe or screenshot as supporting context. |
-| JSON file | Attach structured test or UI data as supporting context. |
-| Java CLI file | Generate from a story file using the command line. |
+| Pasted text | Enter Feature, User Story, and Expected Behavior in the dashboard. |
+| TXT or PDF | Import a requirement document and extract recognized sections. |
+| PNG or JPG | Add a wireframe or screenshot as supporting context. |
+| JSON | Add structured UI or test data as supporting context. |
+| Java story file | Run generation from the CLI. |
 
-> **Important:** images and JSON are attached as supporting context in the frontend. The main story still comes from the editable story fields or extracted TXT/PDF text.
+Images and JSON provide additional context. The main story comes from the editable fields or extracted TXT/PDF text.
 
-## What outputs are generated?
+### Generated outputs
 
-Every successful run produces a structured QA suite with fields such as:
+Each case can include:
 
-- Unique test-case ID
-- Category: Positive, Negative, Boundary, or Edge
-- Test type
-- Scenario
-- Preconditions
-- Test steps
-- Test data
+- ID, priority, category, and test type
+- Scenario and preconditions
+- Test data and steps
 - Expected result
-- Automation-ready preview where applicable
+- Basic automation preview where available
 
-The application generates:
+The product provides:
 
-- **JSON**: complete structured output for APIs, automation, and future processing.
-- **CSV**: spreadsheet-friendly output for review, sharing, and test-management import.
-- **Dashboard results**: searchable, filterable cases with category coverage and expanded details.
-- **Automation previews**: generated snippets in Playwright, Cypress, or Gherkin format.
+- **Dashboard results** with search, filters, category totals, and case details
+- **JSON** for APIs, automation, and further processing
+- **CSV** for spreadsheets and test-management tools
+- **Playwright TypeScript**, **Cypress JavaScript**, and **Cucumber Gherkin** previews
 
-Default files:
+Default output files:
 
 ```text
 output/generated_test_cases.json
 output/generated_test_cases.csv
 ```
 
-## Coverage and automation
+## Coverage and quality checks
 
-The generator is designed to cover the four core test-case types in every suite:
+The generator covers four test-case categories:
 
-| Type | What it checks |
+| Category | Focus |
 |---|---|
-| Positive | The feature works when valid input and normal actions are used. |
-| Negative | Invalid input, rejected actions, errors, and failure messages. |
-| Boundary | Minimums, maximums, limits, empty values, and just-inside or just-outside values. |
-| Edge | Unusual flows, refreshes, repeated actions, unexpected state, and less common user behavior. |
+| Positive | Valid input and expected user flows |
+| Negative | Invalid input, rejected actions, and errors |
+| Boundary | Minimums, maximums, limits, and empty values |
+| Edge | Unusual flows, repeated actions, refreshes, and unexpected states |
 
-The dashboard shows the count for each category. The quality validator also checks that Positive, Negative, Boundary, and Edge coverage are all represented before the result is treated as a complete suite.
+The dashboard shows the count for every category. The quality validator checks that all four categories are represented.
 
-### Basic Playwright script layout
+Additional checks include:
 
-The frontend generates a basic Playwright test layout for each selected case. It includes:
+- Required IDs, scenarios, steps, and expected results
+- Valid structured AI responses
+- Duplicate IDs and duplicate scenarios
+- Matching category and test type
+- Missing or incomplete input sections
 
-1. A `test()` block named after the scenario.
-2. Playwright actions such as `page.goto()`, `getByLabel().fill()`, `getByRole().click()`, `check()`, `reload()`, and keyboard actions when the step can be recognized.
-3. A comment containing the expected result.
-4. A `TODO` comment for any step that needs a project-specific locator or implementation.
+These checks improve consistency, but they cannot prove that every AI-generated scenario matches the product perfectly. Review the suite against the requirement before using it in production.
 
-The same case can also be viewed as Cypress JavaScript or Cucumber Gherkin.
+## Automation preview
 
-> **Important:** The generated Playwright scripts are not entirely reliable or production-ready. They are intended to provide a basic automation layout and a helpful starting point. Review and adapt the locators, test data, authentication flow, environment setup, and assertions for the application before using them in a real test suite.
+The product creates a basic Playwright layout for each selected case. It may include actions such as navigation, form filling, clicking, checking boxes, reloads, and keyboard input. It also includes the expected result and a `TODO` for steps that need application-specific locators.
 
-## How quality and accuracy are checked
+The generated Playwright code is **not entirely reliable or production-ready**. Use it as a basic layout and starting point. Review and adapt the locators, test data, authentication, environment setup, and assertions before running it against a real application.
 
-The product does not claim that an AI model is perfect. Instead, it uses several checks to make the result safer and more consistent:
-
-### 1. Input validation
-
-The story is checked for the information needed to generate useful cases. Missing feature, story, or expected-behavior information is reported before generation.
-
-### 2. Response parsing
-
-The AI response must be valid structured JSON. Empty responses, malformed JSON, missing `choices`, and missing `content` are handled as errors instead of being silently exported.
-
-### 3. Required-field validation
-
-Each test case must contain the fields needed to execute or review it, including an ID, scenario, steps, and expected result.
-
-### 4. Duplicate detection
-
-The validator checks for duplicate test-case IDs and duplicate scenarios so the suite does not contain accidental repetitions.
-
-### 5. Category and type consistency
-
-A test case labelled Positive, Negative, Boundary, or Edge must use a matching test type. Incorrect combinations are rejected.
-
-### 6. Coverage quality
-
-The quality validator checks that all four requested categories are represented. The dashboard shows the resulting coverage profile so gaps are visible immediately.
-
-### 7. Human review remains part of QA
-
-Validation checks structure, consistency, and coverage. It cannot prove that every scenario matches the product perfectly. Review the generated suite against the original requirement before using it in production testing.
-
-## Product flow
+## Project structure
 
 ```text
-Requirement, document, or wireframe
-                ↓
-        Extract and validate input
-                ↓
-        Build a structured AI prompt
-                ↓
-          Generate test cases
-                ↓
-      Parse and validate the response
-                ↓
-       Review coverage and details
-                ↓
-            Export JSON or CSV
+src/main/java/       Java application, API, services, and validators
+src/test/java/       JUnit tests
+src/main/resources/  Non-secret configuration
+frontend/            React dashboard
+input/               Example story files
+output/              Generated JSON and CSV files
 ```
-
-## Technology
-
-- Java 25 LTS
-- Maven
-- OpenRouter API
-- OkHttp
-- Jackson
-- SLF4J
-- Swing desktop UI
-- React, Vite, and TypeScript dashboard
-- JUnit 5
 
 ## Important files
 
-### Java entry points
-
 | File | Purpose |
 |---|---|
-| `Main.java` | Runs the CLI. It accepts a file path or asks for one when no argument is provided. |
-| `GuiMain.java` | Opens the Swing desktop application with file browsing, previews, generation, and export. |
-| `Launcher.java` | Selects GUI, CLI, or API-server mode from one entry point. |
-
-### Java services
-
-| File | Purpose |
-|---|---|
-| `GenerationService.java` | Coordinates reading, AI generation, parsing, validation, and file output. |
-| `AIService.java` | Calls OpenRouter, handles timeouts/errors, and retries temporary failures. |
-| `ApiServer.java` | Provides the local API used by the React dashboard. |
-| `GenerationResult.java` | Holds generation status, messages, structured output, CSV, and file paths. |
-| `PromptBuilder.java` | Builds the structured prompt sent to the model. |
-| `ResponseParser.java` | Converts the AI response into Java model objects. |
-
-### Validation and output
-
-| File | Purpose |
-|---|---|
-| `TestCaseValidator.java` | Checks required fields, duplicates, and category/type consistency. |
-| `TestCaseQualityValidator.java` | Checks coverage of all four test categories. |
-| `CsvExporter.java` | Creates spreadsheet-friendly CSV output. |
-| `FileUtil.java` | Creates output folders and writes generated files. |
-| `TestCasePrinter.java` | Prints cases and validation summaries in the terminal. |
-
-### Frontend
-
-| File | Purpose |
-|---|---|
-| `frontend/src/App.tsx` | Main dashboard, input workflow, filters, results, and downloads. |
-| `frontend/src/api/client.ts` | Calls the Java API or loads demo fixtures when no API URL is configured. |
-| `frontend/src/utils/storyDocument.ts` | Reads TXT/PDF files and extracts story sections. |
-| `frontend/src/automation/scripts.ts` | Builds automation previews. |
-| `frontend/src/fixtures/generatedTestCases.ts` | Provides offline demo data. |
-
-## Project folders
-
-```text
-input/                  Example user-story files
-output/                 Generated JSON and CSV files
-src/main/java/          Java CLI, GUI, API, services, and validators
-src/main/resources/     Non-secret application configuration
-src/test/java/          JUnit tests
-frontend/               React dashboard
-.vscode/                Java 25 settings and run profiles
-pom.xml                Maven configuration
-```
-
-## Input format for Java CLI and API
-
-A simple story can use these sections:
-
-```text
-Feature: User Login
-
-User Story:
-As a registered user, I want to log in to my account.
-
-Expected Behavior:
-Valid users should reach the dashboard.
-Invalid users should see an error message.
-```
-
-The frontend recognizes:
-
-- `Feature`
-- `User Story`
-- `Expected Behavior`
-- `Acceptance Criteria`
+| `Main.java` | Runs the command-line generator. |
+| `GuiMain.java` | Opens the Swing desktop application. |
+| `Launcher.java` | Starts GUI, CLI, or API-server mode. |
+| `GenerationService.java` | Coordinates generation, parsing, validation, and export. |
+| `ApiServer.java` | Provides the API used by the React dashboard. |
+| `TestCaseValidator.java` | Checks fields, duplicates, and category consistency. |
+| `TestCaseQualityValidator.java` | Checks coverage of all four categories. |
+| `frontend/src/App.tsx` | Main dashboard workflow and results view. |
+| `frontend/src/automation/scripts.ts` | Creates automation previews. |
 
 ## Setup
 
-### 1. Configure the API key
+### Requirements
 
-The Java backend needs an OpenRouter key. Set it in the same PowerShell terminal used to start the backend:
+- Java 25 LTS
+- Maven
+- Node.js and npm
+- An OpenRouter API key for real AI generation
+
+### Configure the API key
+
+In PowerShell, set the key in the terminal that starts the Java server:
 
 ```powershell
 $env:OPENROUTER_API_KEY="your-openrouter-api-key"
 ```
 
-**Why:** the key is kept on the server and out of browser-visible frontend code.
+The key stays on the Java server. Do not put it in a `VITE_*` variable or commit it to Git.
 
-Never put `OPENROUTER_API_KEY` in a `VITE_*` variable or commit it to Git.
+## Use the product
 
-### 2. Confirm Java and Maven
+### Option 1: React dashboard with real AI
 
-```powershell
-java -version
-mvn -version
-```
+Use two terminals so the Java server can protect the API key while React serves the interface.
 
-**Why:** the project compiles for Java 25 LTS and uses Maven to provide dependencies such as Jackson and OkHttp.
-
-## Run the Java CLI
-
-From the project root:
-
-```powershell
-mvn exec:java "-Dexec.mainClass=com.sakshi.Main" "-Dexec.args=input/user_story.txt"
-```
-
-**Why:** this runs the CLI with the Maven classpath and uses the supplied story file.
-
-To be asked for a path instead:
-
-```powershell
-mvn exec:java "-Dexec.mainClass=com.sakshi.Main"
-```
-
-**Why:** without a file argument, `Main.java` prompts:
-
-```text
-Enter user story file path:
-```
-
-## Run the Java desktop GUI
-
-```powershell
-mvn exec:java "-Dexec.mainClass=com.sakshi.GuiMain"
-```
-
-**Why:** the Swing GUI is useful when you want file browsing, story previews, generated JSON, CSV-style results, and output locations without using the terminal.
-
-## Run from VS Code
-
-1. Open the repository root in VS Code.
-2. Install the Extension Pack for Java.
-3. Set `OPENROUTER_API_KEY` in the integrated terminal.
-4. Open **Run and Debug** with `Ctrl+Shift+D`.
-5. Select a profile and press `F5`.
-
-Available profiles:
-
-- **AI Test Case Generator (Launcher)**: opens the mode selector.
-- **AI Test Case Generator (CLI)**: runs the example story.
-- **AI Test Case Generator (GUI)**: opens the Swing application.
-
-**Why:** the profiles use the Java project classpath and Maven dependencies, avoiding the common generic Code Runner classpath problem.
-
-## Run the full React dashboard with real AI
-
-Use two terminals because the Java process protects the API key and the React process serves the browser interface.
-
-### Terminal 1: start the Java API
-
-From the project root:
+**Terminal 1: start the Java API**
 
 ```powershell
 $env:OPENROUTER_API_KEY="your-openrouter-api-key"
 mvn exec:java "-Dexec.mainClass=com.sakshi.Launcher" "-Dexec.args=--server"
 ```
 
-You should see:
-
-```text
-Java generator API listening at http://localhost:8080
-```
-
-Check the backend:
+The API runs at `http://localhost:8080`. Confirm it is ready at:
 
 ```text
 http://localhost:8080/api/health
@@ -339,15 +165,12 @@ Expected response:
 {"status":"ok"}
 ```
 
-**Why:** the Java API is the secure bridge between the browser and OpenRouter.
-
-### Terminal 2: start the frontend
+**Terminal 2: start the dashboard**
 
 ```powershell
-cd frontend
-npm install
+npm --prefix frontend install
 $env:VITE_API_BASE_URL="http://localhost:8080"
-npm run dev
+npm --prefix frontend run dev
 ```
 
 Open the Vite URL, usually:
@@ -356,37 +179,54 @@ Open the Vite URL, usually:
 http://localhost:5173
 ```
 
-Then import or paste a story, attach optional context, choose coverage options, and click **Generate test cases**.
+Paste or import a story, attach optional context, choose coverage options, and select **Generate test cases**.
 
-**Why:** `VITE_API_BASE_URL` tells the frontend to use real backend generation instead of fixture data.
+### Option 2: Demo mode
 
-### Optional frontend configuration
+Start the dashboard without `VITE_API_BASE_URL`:
 
-Create `frontend/.env.local`:
-
-```env
-VITE_API_BASE_URL=http://localhost:8080
+```powershell
+npm --prefix frontend run dev
 ```
 
-Restart Vite after changing it. Do not place the OpenRouter key in this file.
+Demo mode shows sample fixture data without Java or an API key. It is useful for exploring the interface but does not call the AI service.
 
-### Demo mode
+### Option 3: Java CLI
 
-If `VITE_API_BASE_URL` is not set, the dashboard loads sample results from `frontend/src/fixtures/generatedTestCases.ts`.
+Generate from a file:
 
-**Why:** demo mode lets people explore the interface without Java, credentials, or API usage. It is not real AI generation.
-
-## API endpoints
-
-### Health check
-
-```text
-GET http://localhost:8080/api/health
+```powershell
+mvn exec:java "-Dexec.mainClass=com.sakshi.Main" "-Dexec.args=input/user_story.txt"
 ```
 
-### Generate test cases
+Run without a file argument to be prompted for a path:
+
+```powershell
+mvn exec:java "-Dexec.mainClass=com.sakshi.Main"
+```
+
+### Option 4: Java desktop app
+
+```powershell
+mvn exec:java "-Dexec.mainClass=com.sakshi.GuiMain"
+```
+
+The desktop app supports file browsing, story previews, generation, JSON viewing, CSV-style results, and output locations.
+
+### Option 5: VS Code
+
+1. Open the repository root.
+2. Install the Extension Pack for Java.
+3. Set `OPENROUTER_API_KEY` in the integrated terminal.
+4. Open **Run and Debug** with `Ctrl+Shift+D`.
+5. Select a profile and press `F5`.
+
+Available profiles are Launcher, CLI, and GUI. They use the project classpath and Maven dependencies.
+
+## API
 
 ```text
+GET  http://localhost:8080/api/health
 POST http://localhost:8080/api/generate
 ```
 
@@ -402,54 +242,23 @@ Example request:
 
 ## Build and test
 
-Java tests:
-
 ```powershell
 mvn clean test
-```
-
-Frontend production build:
-
-```powershell
 npm --prefix frontend run build
 ```
 
-The test suite covers response parsing, AI-service errors, file handling, CSV export, input validation, duplicate detection, category validation, and quality validation.
+The Java tests cover response parsing, AI-service errors, file handling, CSV export, input validation, duplicate detection, category validation, and quality validation.
 
-## Common problems
+## Technology
 
-### The frontend shows demo data
-
-Set the backend URL and restart Vite:
-
-```powershell
-$env:VITE_API_BASE_URL="http://localhost:8080"
-npm run dev
-```
-
-### The frontend cannot connect
-
-Keep the Java server terminal open and confirm `http://localhost:8080/api/health` returns `{"status":"ok"}`.
-
-### API authentication fails
-
-Set the key in the same terminal that starts the Java server. Do not put it in the frontend environment.
-
-### Main.java does not ask for a path
-
-A file path was passed as an argument. Run the CLI without `-Dexec.args`.
-
-### VS Code shows dependency errors
-
-Open the repository root, install the Java Extension Pack, reload VS Code, and use the project Run/Debug profiles instead of generic Code Runner.
+Java 25, Maven, OpenRouter, OkHttp, Jackson, SLF4J, Swing, React, Vite, TypeScript, and JUnit 5.
 
 ## Security and responsible use
 
 - Keep the OpenRouter key in `OPENROUTER_API_KEY`.
 - Never commit the key to Git.
 - Never put the key in frontend code or `VITE_*` variables.
-- Review generated cases against the original requirement before production use.
-- Treat the validator as a quality gate for structure and coverage, not a replacement for human QA judgment.
+- Review generated cases and automation previews before production use.
 
 ## Author
 
